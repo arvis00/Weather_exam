@@ -1,0 +1,16 @@
+{
+  "name": "weather_exam",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev": "parcel index.html --open 'google chrome'",
+    "build": "parcel build index.html --out-dir public"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.3",
+    "sass": "^1.22.9"
+  }
+}
