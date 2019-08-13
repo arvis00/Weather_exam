@@ -138,22 +138,16 @@ exports.getWeather = getWeather;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.endpointCoordOpenWeather = exports.endpointCoord = exports.forecastEndpoint = exports.gifStaticEndpoint = exports.gifEndpoint = exports.endpoint = void 0;
-var weatherId = '790dff15e5ecdde73da819196a127634';
-var units = 'metric';
-var gifId = '6LkxF8Jv5CrI70LWPSHapYnfCiU40Hfh';
+exports.endpointCoordOpenWeather = exports.forecastEndpoint = exports.gifStaticEndpoint = exports.gifEndpoint = exports.endpoint = void 0;
+var weatherId = "790dff15e5ecdde73da819196a127634";
+var units = "metric";
+var gifId = "6LkxF8Jv5CrI70LWPSHapYnfCiU40Hfh";
 var endpoint = {
   getByCityName: function getByCityName(city) {
     return "https://api.openweathermap.org/data/2.5/weather?q=".concat(city, "&units=").concat(units, "&appid=").concat(weatherId);
   }
 };
 exports.endpoint = endpoint;
-var endpointCoord = {
-  getByCoord: function getByCoord(lat, lon) {
-    return "http://api.apixu.com/v1/current.json?key=28bc2236ab0f460895190244190808&q=".concat(lat, ",").concat(lon);
-  }
-};
-exports.endpointCoord = endpointCoord;
 var endpointCoordOpenWeather = {
   getByCoord: function getByCoord(lat, lon) {
     return "https://api.openweathermap.org/data/2.5/weather?lat=".concat(lat, "&lon=").concat(lon, "&units=").concat(units, "&appid=").concat(weatherId);
@@ -174,7 +168,7 @@ var gifStaticEndpoint = {
 exports.gifStaticEndpoint = gifStaticEndpoint;
 var forecastEndpoint = {
   getByCityName: function getByCityName(city) {
-    return "http://api.apixu.com/v1/forecast.json?key=28bc2236ab0f460895190244190808&q=".concat(city, "&days=7");
+    return "http://api.openweathermap.org/data/2.5/forecast?q=".concat(city, "&units=").concat(units, "&appid=").concat(weatherId);
   }
 };
 exports.forecastEndpoint = forecastEndpoint;
@@ -186,13 +180,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ELEMENTS = void 0;
 var ELEMENTS = {
-  output: document.querySelector('.cards'),
-  form: document.querySelector('.controller'),
+  output: document.querySelector(".cards"),
+  form: document.querySelector(".controller"),
   submit: document.querySelector('[type="submit"]'),
-  loader: document.querySelector('.loading'),
-  containerHeight: document.querySelector('.cards-container'),
-  cardsHeight: document.querySelector('.cards'),
-  refresh: document.querySelector('.refresh')
+  loader: document.querySelector(".loading"),
+  containerHeight: document.querySelector(".cards-container"),
+  cardsHeight: document.querySelector(".cards"),
+  refresh: document.querySelector(".refresh")
 };
 exports.ELEMENTS = ELEMENTS;
 },{}],"localStorage.js":[function(require,module,exports) {
@@ -234,15 +228,15 @@ var _app = require("/app");
 var output = _elements.ELEMENTS.output;
 
 var renderCards = function renderCards(userID, cards) {
-  output.innerHTML = '';
+  output.innerHTML = "";
   cards.forEach(function (card) {
     var main = card.main,
         weather = card.weather,
         name = card.name;
     var weatherCond = weather[0].main;
 
-    if (weatherCond === 'Clear') {
-      weatherCond = 'Sky';
+    if (weatherCond === "Clear") {
+      weatherCond = "Sky";
     }
 
     var gifUrl = _endpoints.gifEndpoint.getByWeatherCondition(weatherCond);
@@ -250,50 +244,50 @@ var renderCards = function renderCards(userID, cards) {
     var forecastUrl = _endpoints.forecastEndpoint.getByCityName(name);
 
     var date = new Date();
-    var template = "\n    <div class='singleCont".concat(card.id, "'>\n        <div class='singleCard").concat(card.id, "' id='singleCard'>\n            <h2><span>").concat(card.name, "</span></h2>\n            <p><span>Temperature: ").concat(main.temp, " &#8451;</span></p>\n            <p><span>Description: ").concat(weather[0].description, "</span></p>\n            <p><span>Humidity: ").concat(main.humidity, "%</span></p>\n            <p><span>").concat(card.retrieved, "</span></p>\n        </div>\n        <button class=delete").concat(card.id, ">\n            <span class=\"line\"></span>\n            <span class=\"line\"></span>\n        </button>\n        <div class=\"overlay").concat(card.id, "\">\n        <h1>See the forecast</h1>\n        </div>\n    </div>\n    ");
-    output.insertAdjacentHTML('afterbegin', template);
+    var template = "\n    <div class='singleCont".concat(card.id, "'>\n        <div class='singleCard").concat(card.id, "' id='singleCard'>\n            <h2><span>").concat(card.name, "</span></h2>\n            <p><span>Temperature: ").concat(Math.round(main.temp), " &#8451;</span></p>\n            <p><span>Feels like: ").concat(Math.round(main.feels_like), " &#8451;</span></p>\n            <p><span>Description: ").concat(weather[0].description, "</span></p>\n            <p><span>Humidity: ").concat(main.humidity, "%</span></p>\n            <p><span>").concat(card.retrieved, "</span></p>\n        </div>\n        <button class=delete").concat(card.id, ">\n            <span class=\"line\"></span>\n            <span class=\"line\"></span>\n        </button>\n        <div class=\"overlay").concat(card.id, "\">\n        <h1>See the forecast</h1>\n        </div>\n    </div>\n    ");
+    output.insertAdjacentHTML("afterbegin", template);
     var singleCard2 = document.querySelector("[class^='singleCard']");
     var singleCont = document.querySelector("[class^='singleCont']");
     var overlay = document.querySelector("[class^='overlay']");
     var overlayText = document.querySelector("[class^='overlay'] h1");
     var deleteBtn = document.querySelector(".delete".concat(card.id));
-    overlay.style.width = '249px';
-    overlay.style.padding = '18px';
-    overlay.style.margin = '6px';
-    overlay.style.position = 'absolute';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.bottom = '0';
-    overlay.style.background = 'rgba(12, 98, 226, 0.678)';
-    overlay.style.opacity = '0';
-    overlay.style.transition = '.3s all';
-    overlay.style.borderRadius = '12px';
+    overlay.style.width = "249px";
+    overlay.style.padding = "18px";
+    overlay.style.margin = "6px";
+    overlay.style.position = "absolute";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.bottom = "0";
+    overlay.style.background = "rgba(12, 98, 226, 0.678)";
+    overlay.style.opacity = "0";
+    overlay.style.transition = ".3s all";
+    overlay.style.borderRadius = "12px";
 
     singleCont.onmouseenter = function () {
       singleCard2.style.filter = "blur(2px)";
-      overlay.style.opacity = '1';
-      deleteBtn.style.display = 'block';
+      overlay.style.opacity = "1";
+      deleteBtn.style.display = "block";
     };
 
     singleCont.onmouseleave = function () {
       singleCard2.style.filter = "blur(0px)";
-      overlay.style.opacity = '0';
-      deleteBtn.style.display = 'none';
+      overlay.style.opacity = "0";
+      deleteBtn.style.display = "none";
     };
 
     deleteBtn.onmouseenter = function () {
-      overlay.style.background = 'rgba(245, 4, 4, 0.678)';
-      overlayText.textContent = 'Remove city';
+      overlay.style.background = "rgba(245, 4, 4, 0.678)";
+      overlayText.textContent = "Remove city";
     };
 
     deleteBtn.onmouseleave = function () {
-      overlay.style.background = 'rgba(12, 98, 226, 0.678)';
-      overlayText.textContent = 'See the forecast';
+      overlay.style.background = "rgba(12, 98, 226, 0.678)";
+      overlayText.textContent = "See the forecast";
     };
 
-    fetchGif(gifUrl);
-    (0, _localStorage.saveToLocalStorage)(userID, cards);
-    deleteBtn.addEventListener('click', function () {
+    fetchGif(gifUrl); // saveToLocalStorage(userID, cards);
+
+    deleteBtn.addEventListener("click", function () {
       deleteCard();
     });
 
@@ -313,29 +307,23 @@ var renderCards = function renderCards(userID, cards) {
       }).then(function (result) {
         gifResult(result);
       }).catch(function (error) {
-        console.log('klaida', error);
+        console.log("klaida", error);
       });
     }
 
     function gifResult(finalResult) {
       var gifUrlResult = finalResult.data.images.fixed_height_small.url;
-      console.log(gifUrlResult);
       var urlString = "url('".concat(gifUrlResult, "')");
       var singleCard = document.querySelector(".singleCard".concat(card.id));
-      singleCard.style.backgroundImage = urlString; // singleCard.style.backgroundColor = 'black'
-      // singleCard.style.backgroundBlendMode = 'screen'
-
-      singleCard.style.backgroundSize = 'cover';
-      singleCard.style.backgroundRepeat = 'no-repeat';
+      singleCard.style.backgroundImage = urlString;
+      singleCard.style.backgroundSize = "cover";
+      singleCard.style.backgroundRepeat = "no-repeat";
     }
 
     var pressOverlay = document.querySelector(".overlay".concat(card.id));
-    pressOverlay.addEventListener('click', function () {
+    pressOverlay.addEventListener("click", function () {
       fetchForecast(forecastUrl);
-    }); // function openPopUp(forecastUrl) {
-    // fetchForecast(forecastUrl)
-    // console.log('press')
-    // }
+    });
 
     function fetchForecast(url) {
       fetch(url).then(function (response) {
@@ -343,39 +331,78 @@ var renderCards = function renderCards(userID, cards) {
       }).then(function (result) {
         forecastResult(result);
       }).catch(function (error) {
-        console.log('klaida', error);
+        console.log("klaida", error);
       });
     }
 
     function forecastResult(result) {
-      var _result = result,
-          forecast = _result.forecast;
+      console.log(result);
+      var list = result.list;
+      list.splice(0, 1);
 
-      var forecastTemp = function forecastTemp(dayNumber) {
-        result = forecast.forecastday[dayNumber].day.avgtemp_c;
-        return result;
-      };
-
-      var dayOfWeek = function dayOfWeek(dayNumber) {
-        var timestamp = forecast.forecastday[dayNumber].date_epoch;
-        var a = new Date(timestamp * 1000);
-        var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      var dayOfWeek = function dayOfWeek(dayNumber, timeStampId) {
+        dayNumber != undefined ? timeStampId = listChunks[dayNumber][0].dt : timeStampId;
+        var a = new Date(timeStampId * 1000);
+        var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         var dayOfWeek = days[a.getDay()];
         return dayOfWeek;
       };
 
-      var dayIcon = function dayIcon(dayNumber) {
-        result = forecast.forecastday[dayNumber].day.condition.icon;
+      var listChunks = list.reduce(function (result, value, index) {
+        if (!index || dayOfWeek(undefined, result[result.length - 1][0].dt) !== dayOfWeek(undefined, value.dt)) {
+          return result.concat([[value]]);
+        }
+
+        result[result.length - 1].push(value);
         return result;
+      }, []);
+      console.log(listChunks);
+
+      var forecastTemp = function forecastTemp(dayNumber) {
+        var temp = Math.round(listChunks[dayNumber].reduce(function (result, value) {
+          return result + value.main.temp;
+        }, 0) / listChunks[dayNumber].length);
+        return temp;
+      };
+
+      var dayIcon = function dayIcon(dayNumber) {
+        var iconCode;
+        listChunks[dayNumber].forEach(function (threeHours) {
+          var a = new Date(threeHours.dt_txt);
+          var hour = a.getHours();
+
+          if (hour === 12) {
+            iconCode = threeHours.weather[0].icon;
+          }
+        });
+
+        if (!iconCode) {
+          iconCode = listChunks[dayNumber][listChunks[dayNumber].length - 1].weather[0].icon;
+        }
+
+        return "http://openweathermap.org/img/wn/".concat(iconCode, "@2x.png");
       };
 
       var dayDescr = function dayDescr(dayNumber) {
-        result = forecast.forecastday[dayNumber].day.condition.text;
-        return result;
+        var desc;
+        listChunks[dayNumber].forEach(function (threeHours) {
+          var a = new Date(threeHours.dt_txt);
+          var hour = a.getHours();
+
+          if (hour === 12) {
+            desc = threeHours.weather[0].description;
+          }
+        });
+
+        if (!desc) {
+          desc = listChunks[dayNumber][listChunks[dayNumber].length - 1].weather[0].description;
+        }
+
+        return desc;
       };
 
-      var templateForecast = "\n        <div id=\"myModal\" class=\"modal\">\n            <div class=\"modal-content\">\n                <span class=\"close\">&times;</span>\n                <h2>Weather forecast</h2>\n                <div class='daysList'>\n                    <div>\n                        <p>".concat(dayOfWeek(1), "</p>\n                        <img src=").concat(dayIcon(1), ">\n                        <p>").concat(forecastTemp(1), "&#8451;</p>\n                        <p>").concat(dayDescr(1), "</p>\n                    </div>\n                    <div>\n                        <p>").concat(dayOfWeek(2), "</p>\n                        <img src=").concat(dayIcon(2), ">\n                        <p>").concat(forecastTemp(2), "&#8451;</p>\n                        <p>").concat(dayDescr(2), "</p>\n                    </div>\n                    <div>\n                        <p>").concat(dayOfWeek(3), "</p>\n                        <img src=").concat(dayIcon(3), ">\n                        <p>").concat(forecastTemp(3), "&#8451;</p>\n                        <p>").concat(dayDescr(3), "</p>\n                    </div>\n                    <div>\n                        <p>").concat(dayOfWeek(4), "</p>\n                        <img src=").concat(dayIcon(4), ">\n                        <p>").concat(forecastTemp(4), "&#8451;</p>\n                        <p>").concat(dayDescr(4), "</p>\n                    </div>\n                    <div>\n                        <p>").concat(dayOfWeek(5), "</p>\n                        <img src=").concat(dayIcon(5), ">\n                        <p>").concat(forecastTemp(5), "&#8451;</p>\n                        <p>").concat(dayDescr(5), "</p>\n                    </div>\n                    <div>\n                        <p>").concat(dayOfWeek(6), "</p>\n                        <img src=").concat(dayIcon(6), ">\n                        <p>").concat(forecastTemp(6), "&#8451;</p>\n                        <p>").concat(dayDescr(6), "</p>\n                    </div>\n                </div>    \n            </div>\n        </div>\n        ");
-      output.insertAdjacentHTML('afterend', templateForecast);
+      var templateForecast = "\n        <div id=\"myModal\" class=\"modal\">\n            <div class=\"modal-content\">\n                <span class=\"close\">&times;</span>\n                <h2>Weather forecast</h2>\n                <div class='daysList'>\n                    <div>\n                        <p>".concat(dayOfWeek(0), "</p>\n                        <img src=").concat(dayIcon(0), ">\n                        <p>").concat(forecastTemp(0), "&#8451;</p>\n                        <p>").concat(dayDescr(0), "</p>\n                    </div>\n                    <div>\n                        <p>").concat(dayOfWeek(1), "</p>\n                        <img src=").concat(dayIcon(1), ">\n                        <p>").concat(forecastTemp(1), "&#8451;</p>\n                        <p>").concat(dayDescr(1), "</p>\n                    </div>\n                    <div>\n                        <p>").concat(dayOfWeek(2), "</p>\n                        <img src=").concat(dayIcon(2), ">\n                        <p>").concat(forecastTemp(2), "&#8451;</p>\n                        <p>").concat(dayDescr(2), "</p>\n                    </div>\n                    <div>\n                        <p>").concat(dayOfWeek(3), "</p>\n                        <img src=").concat(dayIcon(3), ">\n                        <p>").concat(forecastTemp(3), "&#8451;</p>\n                        <p>").concat(dayDescr(3), "</p>\n                    </div>\n                    <div>\n                        <p>").concat(dayOfWeek(4), "</p>\n                        <img src=").concat(dayIcon(4), ">\n                        <p>").concat(forecastTemp(4), "&#8451;</p>\n                        <p>").concat(dayDescr(4), "</p>\n                    </div>\n                </div>    \n            </div>\n        </div>\n        ");
+      output.insertAdjacentHTML("afterend", templateForecast);
       var modal = document.getElementById("myModal");
       var span = document.getElementsByClassName("close")[0];
       modal.style.display = "block";
@@ -391,17 +418,18 @@ var renderCards = function renderCards(userID, cards) {
       };
     }
   });
+  (0, _localStorage.saveToLocalStorage)(userID, cards);
 };
 
 exports.renderCards = renderCards;
 },{"./elements":"view/elements.js","/localStorage":"localStorage.js","/http/endpoints":"http/endpoints.js","/app":"app.js"}],"view/effects.js":[function(require,module,exports) {
-var nav = document.querySelector('nav');
-var portfolio = document.querySelector('.portfolio');
-window.addEventListener('scroll', function () {
+var nav = document.querySelector("nav");
+var portfolio = document.querySelector(".portfolio");
+window.addEventListener("scroll", function () {
   if (window.scrollY > 0) {
-    nav.style.height = '50px';
+    nav.style.height = "50px";
   } else {
-    nav.style.height = '60px';
+    nav.style.height = "60px";
   }
 });
 },{}],"img/rain.jpg":[function(require,module,exports) {
@@ -444,8 +472,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-console.log('Good luck with your exam!');
-localStorage.clear();
+var cards = [];
+myRefreshFunction();
 getLocation();
 var objBtn = {
   deleted: false
@@ -466,9 +494,8 @@ var form = _elements.ELEMENTS.form,
     submit = _elements.ELEMENTS.submit,
     loader = _elements.ELEMENTS.loader,
     refresh = _elements.ELEMENTS.refresh;
-var cards = [];
-var changeUser = document.querySelector('.signOut');
-changeUser.addEventListener('click', signOut);
+var changeUser = document.querySelector(".signOut");
+changeUser.addEventListener("click", signOut);
 
 function signOut() {
   var proceed = false;
@@ -478,7 +505,7 @@ function signOut() {
 
     if (promptResult === "") {
       proceed = false;
-      alert('Username can not be blank');
+      alert("Username can not be blank");
     } else if (promptResult === null) {
       cards = (0, _localStorage.getCardsFromLocalStorage)(userID) || [];
 
@@ -504,11 +531,11 @@ function signOut() {
     myRefresh();
   }
 
-  if (userID !== 'default') {
+  if (userID !== "default") {
     changeUser.textContent = "".concat(userID);
 
     changeUser.onmouseenter = function () {
-      changeUser.textContent = 'Sign out';
+      changeUser.textContent = "Change user";
     };
 
     changeUser.onmouseleave = function () {
@@ -520,20 +547,20 @@ function signOut() {
 }
 
 var showMoreBtn = function showMoreBtn() {
-  var show = document.querySelector('.show-more');
-  show.style.display = 'block';
-  show.addEventListener('click', function () {
-    var containerHeight = document.querySelector('.cards-container').offsetHeight;
-    var cardsHeight = document.querySelector('.cards').offsetHeight;
+  var show = document.querySelector(".show-more");
+  show.style.display = "block";
+  show.addEventListener("click", function () {
+    var containerHeight = document.querySelector(".cards-container").offsetHeight;
+    var cardsHeight = document.querySelector(".cards").offsetHeight;
 
     if (cardsHeight > containerHeight) {
-      document.querySelector('.cards-container').style.height = "".concat(cardsHeight, "px");
-      show.style.display = 'none';
+      document.querySelector(".cards-container").style.height = "".concat(cardsHeight, "px");
+      show.style.display = "none";
     }
   });
 };
 
-form.addEventListener('submit', function (e) {
+form.addEventListener("submit", function (e) {
   submitMe(e);
 });
 
@@ -546,22 +573,22 @@ function submitMe(e) {
   });
 
   if (!city.trim()) {
-    alert('please insert correct city name');
+    alert("please insert correct city name");
     return null;
   } else if (!!check) {
-    alert('this city already exists, enter something new :)');
+    alert("this city already exists, enter something new :)");
     return null;
   }
 
   var urlWeather = _endpoints.endpoint.getByCityName(city);
 
   fetchCity(urlWeather);
-  document.getElementById('myForm').reset();
+  document.getElementById("myForm").reset();
   submitMe.called = true;
   window.submitBtn = true;
 }
 
-refresh.addEventListener('click', myRefreshFunction);
+refresh.addEventListener("click", myRefreshFunction);
 
 function myRefreshFunction() {
   myRefresh();
@@ -597,7 +624,7 @@ function updateStatus(timer) {
 
 refresh.onmouseenter = function () {
   enabled = false;
-  refresh.textContent = 'Update now';
+  refresh.textContent = "Update now";
 };
 
 refresh.onmouseleave = function () {
@@ -619,13 +646,13 @@ function myRefresh() {
 }
 
 var fetchCity = function fetchCity(url) {
-  submit.style.display = 'none';
-  loader.style.display = 'flex';
+  submit.style.display = "none";
+  loader.style.display = "flex";
   (0, _http.getWeather)(url).then(function (r) {
-    loader.style.display = 'none';
-    submit.style.display = 'inline-block';
+    loader.style.display = "none";
+    submit.style.display = "inline-block";
 
-    if (r.cod === '404') {
+    if (r.cod === "404") {
       throw new Error(r.message);
     }
 
@@ -638,15 +665,15 @@ var fetchCity = function fetchCity(url) {
 
     cards.push(card);
     (0, _views.renderCards)(userID, cards);
-    var containerHeight = document.querySelector('.cards-container').offsetHeight;
-    var cardsHeight = document.querySelector('.cards').offsetHeight;
+    var containerHeight = document.querySelector(".cards-container").offsetHeight;
+    var cardsHeight = document.querySelector(".cards").offsetHeight;
 
     if (cardsHeight > containerHeight) {
       showMoreBtn();
     }
   }).catch(function (e) {
     console.log(e);
-    alert('Your city was not found, please check the spelling');
+    alert("Your city was not found, please check the spelling");
   });
 };
 
@@ -667,22 +694,7 @@ function SendLocation(data) {
 
   var urlCoord = _endpoints.endpointCoordOpenWeather.getByCoord(latitude, longitude);
 
-  var urlCoordCurrLoc = _endpoints.endpointCoord.getByCoord(latitude, longitude);
-
-  fetchCoordCurrLoc(urlCoordCurrLoc);
   fetchCoord(urlCoord);
-}
-
-var betkas;
-
-function fetchCoordCurrLoc(url) {
-  fetch(url).then(function (response) {
-    return response.json();
-  }).then(function (result) {
-    coordResultCurrLoc(result);
-  }).catch(function (error) {
-    console.log('klaida', error);
-  });
 }
 
 function fetchCoord(url) {
@@ -691,49 +703,55 @@ function fetchCoord(url) {
   }).then(function (result) {
     coordResult(result);
   }).catch(function (error) {
-    console.log('klaida', error);
+    console.log("klaida", error);
   });
 }
 
-var body = document.querySelector('body');
-
-function coordResultCurrLoc(result) {
-  var location = result.location;
-  var locCity = location.name;
-  var currentCity = document.querySelector('.currentCity');
-  currentCity.textContent = "".concat(locCity, ":");
-}
+var body = document.querySelector("body");
+var icon = document.createElement("img");
+icon.className = "currLocIcon";
+document.querySelector(".currentInfo").appendChild(icon);
 
 function coordResult(result) {
   var main = result.main,
       weather = result.weather,
-      name = result.name;
+      name = result.name,
+      id = result.id;
   var locCond = weather[0].main;
   var locTemp = main.temp;
   var locDesc = weather[0].description;
-  var url = './img/rain.jpg';
+  var locCity = name;
+  var iconCode = weather[0].icon;
 
   switch (locCond) {
     case "Rain":
       body.style.background = "url(".concat(_rain.default, ")");
-      body.style.backgroundSize = 'cover';
+      body.style.backgroundSize = "cover";
       break;
 
     case "Clear":
       body.style.background = "url(".concat(_clearSky.default, ")");
-      body.style.backgroundSize = 'cover';
+      body.style.backgroundSize = "cover";
       break;
 
     case "Clouds":
       body.style.background = "url(".concat(_clouds.default, ")");
-      body.style.backgroundSize = 'cover';
+      body.style.backgroundSize = "cover";
       break;
   }
 
-  var currentTemp = document.querySelector('.currentTemp');
-  currentTemp.textContent = "".concat(locTemp, " \u2103");
-  var currentDesc = document.querySelector('.currentDesc');
+  var currentTemp = document.querySelector(".currentTemp");
+  currentTemp.textContent = "".concat(Math.round(locTemp), " \u2103");
+  var currentDesc = document.querySelector(".currentDesc");
   currentDesc.textContent = "".concat(locDesc);
+  icon.src = "http://openweathermap.org/img/wn/".concat(iconCode, "@2x.png");
+  var currentCity = document.querySelector(".currentCity");
+
+  if (id === 6955406) {
+    locCity = "Vilnius";
+  }
+
+  currentCity.textContent = "".concat(locCity, ":");
 }
 },{"./http/http":"http/http.js","./http/endpoints":"http/endpoints.js","./view/elements":"view/elements.js","./view/views":"view/views.js","./view/effects.js":"view/effects.js","./localStorage":"localStorage.js","./img/rain.jpg":"img/rain.jpg","./img/clear-sky.png":"img/clear-sky.png","./img/clouds.jpg":"img/clouds.jpg"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -763,7 +781,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57909" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50985" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
