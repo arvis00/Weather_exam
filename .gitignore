@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #npm
 /node_modules
 
@@ -7,3 +8,6 @@
 #misc
 .cache
 .vscode
+=======
+node_modules
+>>>>>>> 6abcc04a08acd69972f0a555892e48c2e6095507
