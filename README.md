@@ -1,6 +1,6 @@
 # Weather_search
 
-To run the project clone the repo, "npm i" and then use "npm run dev" command
+To run the project download the repo, "npm i" and then use "npm run dev" command
 
 Final project for vanilla Javascript course. 
 - Search weather data for specific cities. Data saves in local storage. 
