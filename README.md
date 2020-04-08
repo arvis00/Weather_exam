@@ -1,5 +1,7 @@
 # Weather_search
 
+To run the project clone the repo, "npm i" and then use "npm run dev" command
+
 Final project for vanilla Javascript course. 
 - Search weather data for specific cities. Data saves in local storage. 
 - Each city card has a background gif which is fetched from giphy.com API. Gifs are fetched according to the weather description for that city (e.g. clear, rain, sunny etc). 
